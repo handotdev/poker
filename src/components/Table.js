@@ -12,9 +12,9 @@ export class Table extends Component {
         return (
             <div style={tableStyle}>
                 <div className="row">
-                    <div className="col-2 p-0 h1 text-right text-white d-flex">
+                    <div className="col-2 p-0 text-right text-white d-flex">
                         <div className="m-auto">
-                            Pot: <span className="badge badge-danger">100</span>
+                            <span className="badge badge-danger" style={{fontSize: '3rem'}}>100</span>
                         </div>
                     </div>
                     <div className="col-10 p-0 text-center">
