@@ -8,16 +8,21 @@ export class Card extends Component {
         const cards = require.context('../cards', true)
         const card = cards(`./${this.props.cardID}.svg`);
 
+        const cardStyle = {
+            height: (this.props.height) ? `${this.props.height}px` : '180px'
+        }
+
         return (
-            <div>
+            <div style={cardContainerStyle}>
                 <img src={card} alt={this.props.cardID} style={cardStyle}/>
             </div>
         )
     }
 }
 
-const cardStyle = {
-    height: '180px'
+const cardContainerStyle = {
+    display: 'inline-block', 
+    margin: '0 4px'
 }
 
 export default Card

@@ -1,12 +1,61 @@
-import React from 'react';
-import Table from './components/Table'
+import React, { Component } from 'react';
+import Table from './components/Table';
+import Players from './components/Players';
+import Hand from './components/Hand';
 
-function App() {
-  return (
-    <div>
-      <Table />
-    </div>
-  );
+class App extends Component {
+
+  state = {
+    table: ['Ah', '10s', '5c', 'Qs', 'Jh'],
+    hand: ['8h', '9h'],
+    players: [
+      {
+        id: '42h2d',
+        name: 'Rebeba',
+        bank: 180,
+        wins: 2
+      },
+      {
+        id: '82h2d',
+        name: 'Geo',
+        bank: 520,
+        wins: 8
+      },
+      {
+        id: '52h2d',
+        name: 'Han',
+        bank: 200,
+        wins: 4,
+      }
+    ],
+    activePlayer: '52h2d'
+  }
+
+  render() {
+
+    const {table, hand, players, activePlayer} = this.state;
+
+    return (
+      <div>
+        <div style={overallStyle}>
+          <Table
+            cards={table}
+          />
+          <Players 
+            players={players}
+            activePlayer={activePlayer}
+          />
+        </div>
+        <Hand
+          hand={hand} 
+        />
+      </div>
+    );
+  }
+}
+
+const overallStyle = {
+  padding: '28px'
 }
 
 export default App;
