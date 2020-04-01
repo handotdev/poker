@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import Card from './Card';
+import { Hand as Poker } from 'pokersolver';
 
 export class Hand extends Component {
-    render() {
 
+    render() {
         const { playerID, activePlayerID } = this.props;
         const disableButton = !(playerID === activePlayerID);
+        
+        const { table, hand } = this.props;
+        const allCards = table.concat(hand);
+        const solver = Poker.solve(allCards);
 
         return (
             <div style={handStyle}>
                 <div className="row d-flex">
                     <div className="col-6 text-right">
-                        {this.props.hand.map((card, i) => <Card key={i} cardID={card} height="150"/>)}
+                        {solver.descr}
+                        {hand.map((card, i) => <Card key={i} cardID={card} height="150"/>)}
                     </div>
                     <div className="col-6 text-left m-auto">
                         <button className="btn btn-outline-success btn-lg m-1" style={buttonStyle} disabled={disableButton}>Raise</button>

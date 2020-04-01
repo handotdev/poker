@@ -77,9 +77,8 @@ class App extends Component {
       const deckLength = this.deck.length;
       const randomCardIndex = Math.floor(Math.random() * deckLength);
 
-      pulledCards.push(this.deck.splice(randomCardIndex, 1));
+      pulledCards.push(this.deck.splice(randomCardIndex, 1)[0]);
     }
-
     return pulledCards;
   }
 
@@ -117,6 +116,7 @@ class App extends Component {
           />
         </div>
         <Hand
+          table={table}
           hand={hand} 
           playerID={playerID}
           activePlayerID={activePlayerID}
