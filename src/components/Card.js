@@ -22,7 +22,7 @@ export class Card extends Component {
 
 const cardContainerStyle = {
     display: 'inline-block', 
-    margin: '0 4px'
+    margin: '4px'
 }
 
 export default Card

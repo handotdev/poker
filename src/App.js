@@ -6,7 +6,9 @@ import Hand from './components/Hand';
 class App extends Component {
 
   state = {
-    table: ['Ah', '10s', '5c', 'Qs', 'Jh'],
+    table: ['Ah', '10s', '5c', 'Qs'],
+    // table: ['Ah', '10s', '5c'],
+    playerID: '52h2d',
     hand: ['8h', '9h'],
     players: [
       {
@@ -29,12 +31,12 @@ class App extends Component {
         bank: 200
       }
     ],
-    activePlayer: '52h2d'
+    activePlayerID: '52h2d'
   }
 
   render() {
 
-    const {table, hand, players, activePlayer} = this.state;
+    const {playerID, table, hand, players, activePlayerID} = this.state;
 
     return (
       <div>
@@ -44,11 +46,13 @@ class App extends Component {
           />
           <Players 
             players={players}
-            activePlayer={activePlayer}
+            activePlayerID={activePlayerID}
           />
         </div>
         <Hand
           hand={hand} 
+          playerID={playerID}
+          activePlayerID={activePlayerID}
         />
       </div>
     );

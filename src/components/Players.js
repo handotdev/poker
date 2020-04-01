@@ -7,7 +7,8 @@ export class Players extends Component {
         return (
             <div style={{textAlign: 'center', marginTop: '28px', marginBottom: '180px'}}>
                 {/* Player card */}
-                {this.props.players.map((player) => <PlayerCard key={player.id} playerInfo={player} turn={player.id === this.props.activePlayer}/>)}
+                {this.props.players.map((player) => 
+                <PlayerCard key={player.id} playerInfo={player} turn={player.id === this.props.activePlayerID}/>)}
             </div>
         )
     }

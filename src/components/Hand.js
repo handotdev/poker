@@ -4,16 +4,20 @@ import Card from './Card';
 export class Hand extends Component {
     render() {
 
+        const { playerID, activePlayerID } = this.props;
+        const disableButton = !(playerID === activePlayerID);
+
         return (
             <div style={handStyle}>
-                <div style={inline}>
-                    {this.props.hand.map((card, i) => <Card key={i} cardID={card} height="150"/>)}
-                </div>
-                <div style={inline}>
-                    <button className="btn btn-outline-success btn-lg">Raise</button>
-                    <button className="btn btn-outline-secondary btn-lg">Check</button>
-                    <button className="btn btn-outline-danger btn-lg">Fold</button>
-                    <button className="btn btn-outline-danger btn-lg" disabled>Disabled</button>
+                <div className="row d-flex">
+                    <div className="col-6 text-right">
+                        {this.props.hand.map((card, i) => <Card key={i} cardID={card} height="150"/>)}
+                    </div>
+                    <div className="col-6 text-left m-auto">
+                        <button className="btn btn-outline-success btn-lg m-1" style={buttonStyle} disabled={disableButton}>Raise</button>
+                        <button className="btn btn-outline-secondary btn-lg m-1" style={buttonStyle} disabled={disableButton}>Check</button>
+                        <button className="btn btn-outline-danger btn-lg m-1" style={buttonStyle} disabled={disableButton}>Fold</button>
+                    </div>
                 </div>
             </div>
         )
@@ -30,8 +34,8 @@ const handStyle = {
     padding: '12px'
 }
 
-const inline = {
-    display: 'inline-block'
+const buttonStyle = {
+    width: '100px'
 }
 
 export default Hand
