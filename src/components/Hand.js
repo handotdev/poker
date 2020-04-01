@@ -7,8 +7,13 @@ export class Hand extends Component {
         return (
             <div style={handStyle}>
                 <div style={inline}>
-                    Hand:
                     {this.props.hand.map((card, i) => <Card key={i} cardID={card} height="150"/>)}
+                </div>
+                <div style={inline}>
+                    <button className="btn btn-outline-success btn-lg">Raise</button>
+                    <button className="btn btn-outline-secondary btn-lg">Check</button>
+                    <button className="btn btn-outline-danger btn-lg">Fold</button>
+                    <button className="btn btn-outline-danger btn-lg" disabled>Disabled</button>
                 </div>
             </div>
         )
@@ -18,12 +23,10 @@ export class Hand extends Component {
 const handStyle = {
     position: 'fixed', 
     bottom: '0', 
-    left: '50%',
-    transform: 'translateX(-50%)',
     width: '100%',
-    backgroundColor: '#C3986B',
+    backgroundColor: '#F7F7F7',
+    borderTop: '1px solid rgba(0,0,0,.125)',
     textAlign: 'center',
-    borderTop: '8px solid black',
     padding: '12px'
 }
 

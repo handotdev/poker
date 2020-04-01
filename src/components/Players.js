@@ -5,7 +5,7 @@ export class Players extends Component {
     render() {
 
         return (
-            <div style={{textAlign: 'center', marginTop: '28px', marginBottom: '220px'}}>
+            <div style={{textAlign: 'center', marginTop: '28px', marginBottom: '180px'}}>
                 {/* Player card */}
                 {this.props.players.map((player) => <PlayerCard key={player.id} playerInfo={player} turn={player.id === this.props.activePlayer}/>)}
             </div>

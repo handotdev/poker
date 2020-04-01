@@ -12,20 +12,21 @@ class App extends Component {
       {
         id: '42h2d',
         name: 'Rebeba',
+        role: 'Dealer',
         bank: 180,
-        wins: 2
+        wager: 50
       },
       {
         id: '82h2d',
         name: 'Geo',
+        role: 'Big Blind',
         bank: 520,
-        wins: 8
+        wager: 50
       },
       {
         id: '52h2d',
         name: 'Han',
-        bank: 200,
-        wins: 4,
+        bank: 200
       }
     ],
     activePlayer: '52h2d'
