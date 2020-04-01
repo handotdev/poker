@@ -5,9 +5,9 @@ export class Table extends Component {
 
     render() {
 
-        let cards = this.props.cards;
+        // Clone array
+        let cards = [...this.props.cards];
         while (cards.length < 5) cards.push('NA');
-        console.log(cards);
 
         return (
             <div style={tableStyle}>

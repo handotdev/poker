@@ -4,13 +4,14 @@ import pokerChip from '../img/chip.png';
 export class PlayerCard extends Component {
     render() {
 
-        const { name, bank, role, wager } = this.props.playerInfo;
+        const { name, bank, role, wager, fold } = this.props.playerInfo;
         const turn = this.props.turn;
 
         const playerCardStyle = {
             margin: '0 4px',
             width: '160px',
-            border: (turn) ? '3px solid #888' : 'none'
+            border: (turn) ? '3px solid #888' : 'none',
+            opacity: (fold) ? '0.2' : '1'
         }
 
         return (

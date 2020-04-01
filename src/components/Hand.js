@@ -17,6 +17,8 @@ export class Hand extends Component {
                         <button className="btn btn-outline-success btn-lg m-1" style={buttonStyle} disabled={disableButton}>Raise</button>
                         <button className="btn btn-outline-secondary btn-lg m-1" style={buttonStyle} disabled={disableButton}>Check</button>
                         <button className="btn btn-outline-danger btn-lg m-1" style={buttonStyle} disabled={disableButton}>Fold</button>
+                        <button className="btn btn-primary btn-lg m-1" style={buttonStyle} onClick={this.props.onNewGame}>Start</button>
+                        <button className="btn btn-primary btn-lg m-1" style={buttonStyle} onClick={this.props.onFlip}>Flip</button>
                     </div>
                 </div>
             </div>
