@@ -71,6 +71,7 @@ class App extends Component {
           hand={hand} 
           playerID={playerID}
           activePlayerID={activePlayerID}
+          onCheck={this.handleCheck}
           onNewGame={this.handleNewGame}
           onFlip={this.handleFlip}
           onLogout={this.handleLogout}
@@ -97,6 +98,8 @@ class App extends Component {
     // Clears table cards
     this.gameRef.update({table: []});
 
+    // Rotate roles of all players
+    // Locate the index of the first player after big blind
     this.rotateRoles();
 
     // Deal cards
@@ -118,11 +121,24 @@ class App extends Component {
     playerRoles.unshift(playerRoles.pop());
 
     const updates = {};
+    // Index of big blind
+    let indexOfBigBlind = 0;
     playerIDs.forEach((playerID, index) => {
-      updates[`${playerID}/role`] = playerRoles[index];
-    })
+      const role = playerRoles[index];
+      updates[`${playerID}/role`] = role;
 
+      // Use same loop to find index of big blind
+      if (role === 'Big Blind') indexOfBigBlind = index;
+    })
+    
+    let indexOfFirstPlayer = indexOfBigBlind + 1;
+    if (playersEntries.length === indexOfFirstPlayer) indexOfFirstPlayer = 0;
+    const activePlayerID = playerIDs[indexOfFirstPlayer];
+
+    // Update roles
     this.gameRef.child('players').update(updates);
+    // Update activePlayerID after new big blind location
+    this.gameRef.update({activePlayerID});
   }
 
   dealPlayer = () => {
@@ -155,6 +171,33 @@ class App extends Component {
       pulledCards.push(this.deck.splice(randomCardIndex, 1)[0]);
     }
     return pulledCards;
+  }
+
+  moveToNextActivePlayer = () => {
+    // TODO: standardize function rather than using this system repeated time to move active player by 1
+    const { players, activePlayerID } = this.state;
+    const playerIDs = Object.keys(players);
+    const playerValues = Object.values(players);
+    let indexOfActivePlayer = playerIDs.indexOf(activePlayerID);
+
+
+    let indexOfNextActivePlayer = indexOfActivePlayer + 1;
+    if (playerIDs.length === indexOfNextActivePlayer) indexOfNextActivePlayer = 0;
+
+    // Loop pass players that have folded
+    console.log(playerValues[indexOfNextActivePlayer].fold);
+    while (playerValues[indexOfNextActivePlayer].fold === true) {
+      indexOfNextActivePlayer++;
+      if (playerIDs.length === indexOfNextActivePlayer) indexOfNextActivePlayer = 0;
+    }
+
+    const nextActivePlayerID = playerIDs[indexOfNextActivePlayer];
+
+    this.gameRef.update({activePlayerID: nextActivePlayerID});
+  }
+
+  handleCheck = () => {
+    this.moveToNextActivePlayer();
   }
 
   // Flips poker cards. Flips 3 if no cards on table. Flip 1 elsewise and under or equals 5 cards
