@@ -17,7 +17,7 @@ class App extends Component {
     this.state = {
       table: [],
       // Add Google Auth ID
-      playerID: '52h2d',
+      playerID: '',
       hand: ['8h', '9h'],
       players: {},
       activePlayerID: ''
@@ -25,10 +25,18 @@ class App extends Component {
 
     const gameID = '03d19c9b-f4e9-42cd-9f1c-3c275a2ad977';
     this.gameRef = firebase.database().ref("games/"+gameID);
-    this.playerRef = this.gameRef.child('players').child(this.state.playerID);
   }
 
   componentDidMount() {
+    // Check if user is logged in
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({playerID: '52h2d'});
+      } else {
+        this.setState({playerID: ''});
+      }
+    });
+
     this.gameRef.on('value', (snapshot) => {
       
       // Load data from realtime
@@ -38,9 +46,11 @@ class App extends Component {
         activePlayerID: (activePlayerID) ? activePlayerID : "",
         players: (players) ? players : {},
         // Update hand from your hand data
-        hand: (players[this.state.playerID].hand) ? players[this.state.playerID].hand : []
+        hand: (this.state.playerID.length > 0 && players[this.state.playerID].hand) ? players[this.state.playerID].hand : []
       })
     })
+
+    // this.handleNewUser();
   }
 
   render() {
@@ -54,16 +64,18 @@ class App extends Component {
           <Players 
             players={players}
             activePlayerID={activePlayerID}
+            onNewUser={this.handleNewUser}
           />
         </div>
-        <Hand
+        { (playerID.length > 0) ? <Hand
           table={table}
           hand={hand} 
           playerID={playerID}
           activePlayerID={activePlayerID}
           onNewGame={this.handleNewGame}
           onFlip={this.handleFlip}
-        />
+          onLogout={this.handleLogout}
+        /> : '' }
       </div>
     );
   }
@@ -90,7 +102,10 @@ class App extends Component {
     this.deal();
   }
 
-  deal = () => this.playerRef.update({hand: this.draw(2)});
+  deal = () => {
+    const playerRef = this.gameRef.child('players').child(this.state.playerID);
+    playerRef.update({hand: this.draw(2)});
+  }
 
   // Returns array of card(s) drawn from deck
   draw = (cards = 1) => {
@@ -112,7 +127,6 @@ class App extends Component {
       console.error("Empty deck. Had to readd all cards");
       this.newDeck();
     }
-    
 
     const tableLength = this.state.table.length;
     if (tableLength === 0) {
@@ -122,6 +136,24 @@ class App extends Component {
       const tableWithNewCards = this.state.table.concat(newCards);
       this.gameRef.update({table: tableWithNewCards})
     }
+  }
+
+  handleNewUser = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    firebase.auth().signInWithPopup(provider).then((result) => {
+      console.log(result);
+    }).catch((error) => {
+      console.error(error.message)
+    });
+  }
+
+  handleLogout = () => {
+    firebase.auth().signOut().then(() => {
+      // Sign-out successful.
+    }).catch((error) => {
+      console.error(error)
+    });
   }
 }
 

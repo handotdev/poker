@@ -9,6 +9,7 @@ export class Players extends Component {
                 {/* Player card */}
                 {playersInfoEntries.map(([id, player]) => 
                 <PlayerCard key={id} playerInfo={player} turn={id === this.props.activePlayerID}/>)}
+                <button className="btn" onClick={this.props.onNewUser}>Login</button>
             </div>
         )
     }
