@@ -49,8 +49,6 @@ class App extends Component {
         hand: (this.state.playerID.length > 0 && players[this.state.playerID].hand) ? players[this.state.playerID].hand : []
       })
     })
-
-    // this.handleNewUser();
   }
 
   render() {
@@ -142,10 +140,19 @@ class App extends Component {
     const provider = new firebase.auth.GoogleAuthProvider();
 
     firebase.auth().signInWithPopup(provider).then((result) => {
-      console.log(result);
-    }).catch((error) => {
-      console.error(error.message)
-    });
+      const { uid, displayName } = result.user;
+      
+      let updates = {};
+      updates['/players/'+uid] = {
+        bank: 200,
+        fold: false,
+        name: displayName
+      }
+      console.log(updates);
+      this.gameRef.update(updates);
+    }).catch((err) => {
+      console.error(err);
+    })
   }
 
   handleLogout = () => {
