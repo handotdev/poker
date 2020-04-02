@@ -25,6 +25,7 @@ class App extends Component {
 
     const gameID = '03d19c9b-f4e9-42cd-9f1c-3c275a2ad977';
     this.gameRef = firebase.database().ref("games/"+gameID);
+    this.playerRef = this.gameRef.child('players').child(this.state.playerID);
   }
 
   componentDidMount() {
@@ -35,7 +36,9 @@ class App extends Component {
       this.setState({
         table: (table) ? table : [],
         activePlayerID: (activePlayerID) ? activePlayerID : "",
-        players: (players) ? players : {}
+        players: (players) ? players : {},
+        // Update hand from your hand data
+        hand: (players[this.state.playerID].hand) ? players[this.state.playerID].hand : []
       })
     })
   }
@@ -80,17 +83,14 @@ class App extends Component {
     // Creates a new deck
     this.newDeck();
 
-    // Clear table and hand
-    this.setState({table: []});
-    this.setState({hand: []});
+    // Clears table cards
+    this.gameRef.update({table: []});
 
     // Deal cards
     this.deal();
   }
 
-  deal = () => {
-    this.setState({hand: this.draw(2)});
-  }
+  deal = () => this.playerRef.update({hand: this.draw(2)});
 
   // Returns array of card(s) drawn from deck
   draw = (cards = 1) => {
@@ -116,11 +116,11 @@ class App extends Component {
 
     const tableLength = this.state.table.length;
     if (tableLength === 0) {
-      this.setState({table: this.draw(3)})
+      this.gameRef.update({table: this.draw(3)})
     } else if (tableLength < 5) {
       const newCards = this.draw();
       const tableWithNewCards = this.state.table.concat(newCards);
-      this.setState({table: tableWithNewCards});
+      this.gameRef.update({table: tableWithNewCards})
     }
   }
 }
