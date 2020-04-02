@@ -27,7 +27,7 @@ export class Hand extends Component {
                         <button className="btn btn-outline-danger btn-lg m-1" style={buttonStyle} disabled={disableButton} onClick={this.props.onFold}>Fold</button>
                         <button className="btn btn-primary btn-lg m-1" style={buttonStyle} onClick={this.props.onNewGame}>Restart</button>
                         <button className="btn btn-primary btn-lg m-1" style={buttonStyle} onClick={this.props.onFlip}>Flip</button>
-                        <button className="btn btn-danger btn-lg m-1" style={buttonStyle} onClick={this.props.onLogout}>Logout</button>
+                        <button className="btn btn-danger btn-lg m-1" style={buttonStyle} onClick={this.props.onLogout}>Quit</button>
                     </div>
                 </div>
             </div>

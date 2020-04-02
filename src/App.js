@@ -158,11 +158,6 @@ class App extends Component {
     this.gameRef.update({activePlayerID});
   }
 
-  dealPlayer = () => {
-    const playerRef = this.gameRef.child('players').child(this.state.playerID);
-    playerRef.update({hand: this.draw(2)});
-  }
-
   dealAll = () => {
     // Retrieve all player IDs
     const playerIDs = Object.keys(this.state.players);
@@ -251,7 +246,8 @@ class App extends Component {
       let updates = {};
       updates['/players/'+uid] = {
         bank: 200,
-        fold: false,
+        // Default fold true until round ends
+        fold: true,
         name: displayName
       }
       this.gameRef.update(updates);
@@ -263,6 +259,14 @@ class App extends Component {
   handleLogout = () => {
     firebase.auth().signOut().then(() => {
       // Sign-out successful.
+      // Save playerID for later use
+      const { playerID } = this.state;
+      // Update playerID in state
+      this.setState({playerID: ''});
+      // Remove playerID
+      const playerRef = this.gameRef.child('players').child(playerID);
+      playerRef.remove();
+      
     }).catch((error) => {
       console.error(error)
     });
