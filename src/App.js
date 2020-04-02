@@ -72,6 +72,7 @@ class App extends Component {
           playerID={playerID}
           activePlayerID={activePlayerID}
           onCheck={this.handleCheck}
+          onFold={this.handleFold}
           onNewGame={this.handleNewGame}
           onFlip={this.handleFlip}
           onLogout={this.handleLogout}
@@ -98,12 +99,28 @@ class App extends Component {
     // Clears table cards
     this.gameRef.update({table: []});
 
+    // Restores player information to default
+    this.restorePlayers();
+
     // Rotate roles of all players
     // Locate the index of the first player after big blind
     this.rotateRoles();
 
     // Deal cards
     this.dealAll();
+  }
+
+  restorePlayers = () => {
+    // Retrieve all player IDs
+    const playerIDs = Object.keys(this.state.players);
+    const updates = {};
+
+    playerIDs.forEach((playerID) => {
+      updates[`${playerID}/wager`] = '';
+      updates[`${playerID}/fold`] = false;
+    })
+    
+    this.gameRef.child('players').update(updates);
   }
 
   rotateRoles = () => {
@@ -185,7 +202,6 @@ class App extends Component {
     if (playerIDs.length === indexOfNextActivePlayer) indexOfNextActivePlayer = 0;
 
     // Loop pass players that have folded
-    console.log(playerValues[indexOfNextActivePlayer].fold);
     while (playerValues[indexOfNextActivePlayer].fold === true) {
       indexOfNextActivePlayer++;
       if (playerIDs.length === indexOfNextActivePlayer) indexOfNextActivePlayer = 0;
@@ -197,6 +213,15 @@ class App extends Component {
   }
 
   handleCheck = () => {
+    this.moveToNextActivePlayer();
+  }
+
+  handleFold = () => {
+    // TODO: standardize updating the player
+    const updates = {};
+    updates[`${this.state.playerID}/fold`] = true;
+    this.gameRef.child('players').update(updates);
+    
     this.moveToNextActivePlayer();
   }
 
