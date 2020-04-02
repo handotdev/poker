@@ -8,7 +8,7 @@ export class PlayerCard extends Component {
         const turn = this.props.turn;
 
         const playerCardStyle = {
-            margin: '0 4px',
+            margin: '4px',
             width: '160px',
             border: (turn) ? '3px solid #888' : 'none',
             opacity: (fold) ? '0.2' : '1'

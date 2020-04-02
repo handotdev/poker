@@ -18,7 +18,7 @@ class App extends Component {
       table: [],
       // Add Google Auth ID
       playerID: '',
-      hand: ['8h', '9h'],
+      hand: [],
       players: {},
       activePlayerID: ''
     }
@@ -31,14 +31,13 @@ class App extends Component {
     // Check if user is logged in
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        this.setState({playerID: '52h2d'});
+        this.setState({playerID: user.uid});
       } else {
         this.setState({playerID: ''});
       }
     });
 
-    this.gameRef.on('value', (snapshot) => {
-      
+    this.gameRef.on('value', (snapshot) => {      
       // Load data from realtime
       const { table, activePlayerID, players } = snapshot.val();
       this.setState({
@@ -53,6 +52,7 @@ class App extends Component {
 
   render() {
     const {playerID, table, hand, players, activePlayerID} = this.state;
+    const isLoggedIn = playerID.length > 0;
     return (
       <div>
         <div style={overallStyle}>
@@ -62,10 +62,11 @@ class App extends Component {
           <Players 
             players={players}
             activePlayerID={activePlayerID}
+            isLoggedIn={isLoggedIn}
             onNewUser={this.handleNewUser}
           />
         </div>
-        { (playerID.length > 0) ? <Hand
+        { (isLoggedIn) ? <Hand
           table={table}
           hand={hand} 
           playerID={playerID}
@@ -97,19 +98,33 @@ class App extends Component {
     this.gameRef.update({table: []});
 
     // Deal cards
-    this.deal();
+    // this.dealPlayer();
+    this.dealAll();
   }
 
-  deal = () => {
+  dealPlayer = () => {
     const playerRef = this.gameRef.child('players').child(this.state.playerID);
     playerRef.update({hand: this.draw(2)});
   }
 
+  dealAll = () => {
+    // Retrieve all player IDs
+    const playerIDs = Object.keys(this.state.players);
+    const updates = {};
+
+    playerIDs.forEach((playerID) => {
+      updates[`${playerID}/hand`] = this.draw(2);
+    })
+    
+    this.gameRef.child('players').update(updates);
+  }
+
   // Returns array of card(s) drawn from deck
   draw = (cards = 1) => {
-
+    // Intialize empty deck to add randomly generated cards
     let pulledCards = [];
 
+    // TODO: make sure that the cards generated are not already drawn
     for (let i = 0; i < cards; i++) {
       const deckLength = this.deck.length;
       const randomCardIndex = Math.floor(Math.random() * deckLength);
@@ -148,7 +163,6 @@ class App extends Component {
         fold: false,
         name: displayName
       }
-      console.log(updates);
       this.gameRef.update(updates);
     }).catch((err) => {
       console.error(err);

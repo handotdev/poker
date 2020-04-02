@@ -10,16 +10,18 @@ export class Hand extends Component {
         
         const { table, hand } = this.props;
         const allCards = table.concat(hand);
-        const solver = Poker.solve(allCards);
+        const handName = (hand.length > 0) ? Poker.solve(allCards).descr : 'Waiting for next round...';
 
         return (
             <div style={handStyle}>
                 <div className="row d-flex">
-                    <div className="col-6 text-right">
-                        {solver.descr}
-                        {hand.map((card, i) => <Card key={i} cardID={card} height="150"/>)}
+                    <div className="col-5">
+                        <div>
+                            {hand.map((card, i) => <Card key={i} cardID={card} height="150"/>)}
+                        </div>
+                        <h4 className="mb-0"><span className="badge badge-success">{handName}</span></h4>
                     </div>
-                    <div className="col-6 text-left m-auto">
+                    <div className="col-7 m-auto">
                         <button className="btn btn-outline-success btn-lg m-1" style={buttonStyle} disabled={disableButton}>Raise</button>
                         <button className="btn btn-outline-secondary btn-lg m-1" style={buttonStyle} disabled={disableButton}>Check</button>
                         <button className="btn btn-outline-danger btn-lg m-1" style={buttonStyle} disabled={disableButton}>Fold</button>
