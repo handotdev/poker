@@ -3,42 +3,66 @@ import Table from './components/Table';
 import Players from './components/Players';
 import Hand from './components/Hand';
 
+import firebase from './firebase';
+
 class App extends Component {
 
-  ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
-  suits = ['c', 'd', 'h', 's'];
-  deck = [];
+  constructor(props) {
+    super(props);
 
-  state = {
-    table: [],
-    // table: ['Ah', '10s', '5c'],
-    playerID: '52h2d',
-    hand: ['8h', '9h'],
-    players: [
-      {
-        id: '42h2d',
-        name: 'Rebeba',
-        role: 'Dealer',
-        bank: 180,
-        wager: 50,
-        fold: false
-      },
-      {
-        id: '82h2d',
-        name: 'Geo',
-        role: 'Big Blind',
-        bank: 520,
-        wager: 50,
-        fold: true
-      },
-      {
-        id: '52h2d',
-        name: 'Han',
-        bank: 200,
-        fold: false
-      }
-    ],
-    activePlayerID: '52h2d'
+    this.ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+    this.suits = ['c', 'd', 'h', 's'];
+    this.deck = [];
+
+    this.state = {
+      table: [],
+      // Add Google Auth ID
+      playerID: '52h2d',
+      hand: ['8h', '9h'],
+      players: {},
+      activePlayerID: ''
+    }
+
+    const gameID = '03d19c9b-f4e9-42cd-9f1c-3c275a2ad977';
+    this.gameRef = firebase.database().ref("games/"+gameID);
+  }
+
+  componentDidMount() {
+    this.gameRef.on('value', (snapshot) => {
+      
+      // Load data from realtime
+      const { table, activePlayerID, players } = snapshot.val();
+      this.setState({
+        table: (table) ? table : [],
+        activePlayerID: (activePlayerID) ? activePlayerID : "",
+        players: (players) ? players : {}
+      })
+    })
+  }
+
+  render() {
+    const {playerID, table, hand, players, activePlayerID} = this.state;
+    return (
+      <div>
+        <div style={overallStyle}>
+          <Table
+            cards={table}
+          />
+          <Players 
+            players={players}
+            activePlayerID={activePlayerID}
+          />
+        </div>
+        <Hand
+          table={table}
+          hand={hand} 
+          playerID={playerID}
+          activePlayerID={activePlayerID}
+          onNewGame={this.handleNewGame}
+          onFlip={this.handleFlip}
+        />
+      </div>
+    );
   }
 
   newDeck = () => {
@@ -57,8 +81,8 @@ class App extends Component {
     this.newDeck();
 
     // Clear table and hand
-    this.setState({table: []})
-    this.setState({hand: []})
+    this.setState({table: []});
+    this.setState({hand: []});
 
     // Deal cards
     this.deal();
@@ -98,33 +122,6 @@ class App extends Component {
       const tableWithNewCards = this.state.table.concat(newCards);
       this.setState({table: tableWithNewCards});
     }
-  }
-
-  render() {
-
-    const {playerID, table, hand, players, activePlayerID} = this.state;
-
-    return (
-      <div>
-        <div style={overallStyle}>
-          <Table
-            cards={table}
-          />
-          <Players 
-            players={players}
-            activePlayerID={activePlayerID}
-          />
-        </div>
-        <Hand
-          table={table}
-          hand={hand} 
-          playerID={playerID}
-          activePlayerID={activePlayerID}
-          onNewGame={this.handleNewGame}
-          onFlip={this.handleFlip}
-        />
-      </div>
-    );
   }
 }
 

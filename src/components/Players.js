@@ -3,12 +3,12 @@ import PlayerCard from './PlayerCard';
 
 export class Players extends Component {
     render() {
-
+        const playersInfoEntries = Object.entries(this.props.players);
         return (
             <div style={{textAlign: 'center', marginTop: '28px', marginBottom: '180px'}}>
                 {/* Player card */}
-                {this.props.players.map((player) => 
-                <PlayerCard key={player.id} playerInfo={player} turn={player.id === this.props.activePlayerID}/>)}
+                {playersInfoEntries.map(([id, player]) => 
+                <PlayerCard key={id} playerInfo={player} turn={id === this.props.activePlayerID}/>)}
             </div>
         )
     }
