@@ -9,7 +9,7 @@ export class PlayerCard extends Component {
 
         const playerCardStyle = {
             margin: '4px',
-            width: '160px',
+            width: '260px',
             border: (turn) ? '3px solid #888' : 'none',
             opacity: (fold) ? '0.2' : '1'
         }

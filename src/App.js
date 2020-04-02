@@ -97,9 +97,32 @@ class App extends Component {
     // Clears table cards
     this.gameRef.update({table: []});
 
+    this.rotateRoles();
+
     // Deal cards
-    // this.dealPlayer();
     this.dealAll();
+  }
+
+  rotateRoles = () => {
+    // Rotate roles
+    const playersEntries = Object.entries(this.state.players);
+    const playerIDs = [];
+    const playerRoles = [];
+
+    playersEntries.forEach(([playerID, playerInfo]) => {
+      playerIDs.push(playerID);
+      playerRoles.push(playerInfo.role ? playerInfo.role : '');
+    })
+
+    // Circle role to the right by one
+    playerRoles.unshift(playerRoles.pop());
+
+    const updates = {};
+    playerIDs.forEach((playerID, index) => {
+      updates[`${playerID}/role`] = playerRoles[index];
+    })
+
+    this.gameRef.child('players').update(updates);
   }
 
   dealPlayer = () => {

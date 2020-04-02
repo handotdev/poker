@@ -20,7 +20,7 @@ const seatCardStyle = {
     display: 'inline-block',
     verticalAlign: 'top',
     margin: '4px',
-    width: '160px',
+    width: '260px',
     minHeight: '110px',
     lineHeight: '110px',
     backgroundColor: '#F8F9FA',
